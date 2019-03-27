@@ -6,7 +6,9 @@ var mongoose = require('mongoose');
 var nodemailer = require('nodemailer');
 
 var db = require('../db');
+var forgot = require('../db');
 const config = require('../config');
+var bcrypt = require('bcrypt');
 
 app.post('/forgot', function(req, res, next) {
     async.waterfall([
@@ -25,7 +27,8 @@ app.post('/forgot', function(req, res, next) {
           user.resetPasswordToken = token;
           user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
          
-          db.save({user})
+          db.save(user)
+          console.log(user);
             done(err, token, user);
           });
       },
@@ -38,11 +41,12 @@ app.post('/forgot', function(req, res, next) {
           }
         });
         var mailOptions = {
+          
           to: user.email,
           from: 'projeto42senai@gmail.com',
           subject: 'Não entre em pânico! ',
           text: 'Este email foi enviado porque a função "Esqueceu a senha" foi aplicada à sua conta. Para definir uma nova senha clique no link abaixo:\n\n' +
-          'http://localhost:4200/#/app/forms?' + token + '\n\n'
+          'http://localhost:4200/#/app/forms?token=' + token + '\n\n'
         };
         smtpTransport.sendMail(mailOptions, function(err) {
           req.flash('info', 'Um e-mail foi enviado para ' + user.email + ' com as instruções.');
@@ -56,8 +60,7 @@ app.post('/forgot', function(req, res, next) {
   });
   
   app.get('/reset/:token', function(req, res) {
-    db.findUser({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
-      console.log(user);
+    db.find({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
       if (!user) {
         req.flash('error', 'O token para resetar sua senha não é valido ou expirou.');
         return res.redirect('http://localhost:4200/#/pages/forgot-password');
@@ -71,23 +74,21 @@ app.post('/forgot', function(req, res, next) {
   app.post('/reset/:token', function(req, res) {
     async.waterfall([
       function(done) {
-        db.findUser({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+        db.find({resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
           if (!user) {
+            console.log('error', 'O token para resetar sua senha não é valido ou expirou.');
             req.flash('error', 'O token para resetar sua senha não é valido ou expirou.');
             return res.redirect('back');
           }
-  
-          user.password = req.body.password;
+
+          user.password = bcrypt.hashSync(req.body.password, config.SALT_ROUNDS);
           user.resetPasswordToken = undefined;
           user.resetPasswordExpires = undefined;
           console.log(user);
-  
-          user.save(function(err) {
-            req.logIn(user, function(err) {
-              done(err, user);
+
+          db.save(user)
+            done(err, user);
             });
-          });
-        });
       },
       function(user, done) {
         var smtpTransport = nodemailer.createTransport({

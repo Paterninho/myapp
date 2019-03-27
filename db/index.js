@@ -3,12 +3,14 @@ var MongoClient = require('mongodb').MongoClient;
 
 var db;
 var collection;
+var forgot;
 
 MongoClient.connect(config.MONGO_URL, (err, dataBase) => {
     if(!err){
         console.log('Connection established to MongoDB.');
         db = dataBase;
         collection = db.collection('users');
+        forgot = db.collection('forgot')
     } else {
         console.log('Not possible to established the connection to MongoDB.')
     }
@@ -17,7 +19,7 @@ MongoClient.connect(config.MONGO_URL, (err, dataBase) => {
 module.exports = {
 
     save: (data) => {
-        collection.insertOne(data)
+        forgot.insertOne(data)
     },
 
     register: (data, handler) => {
@@ -31,9 +33,9 @@ module.exports = {
             handler(err, result);
         })
     },
-    findAll: (handler) => {
-        collection.find((err, result) => {
+    find:(data, handler) => {
+        forgot.findOne(data, (err, result) => {
             handler(err, result);
         })
-    }
+    },
 }
