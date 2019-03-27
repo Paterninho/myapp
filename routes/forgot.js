@@ -6,7 +6,6 @@ var mongoose = require('mongoose');
 var nodemailer = require('nodemailer');
 
 var db = require('../db');
-var forgot = require('../db');
 const config = require('../config');
 var bcrypt = require('bcrypt');
 
@@ -86,7 +85,7 @@ app.post('/forgot', function(req, res, next) {
           user.resetPasswordExpires = undefined;
           console.log(user);
 
-          db.save(user)
+          db.update(user)
             done(err, user);
             });
       },

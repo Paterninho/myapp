@@ -18,8 +18,12 @@ MongoClient.connect(config.MONGO_URL, (err, dataBase) => {
 
 module.exports = {
 
+    update:(data) => {
+        collection.save(data)
+    },
+
     save: (data) => {
-        forgot.insertOne(data)
+        forgot.save(data)
     },
 
     register: (data, handler) => {
