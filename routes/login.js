@@ -8,31 +8,6 @@ var bcrypt = require('bcrypt');
 
 var jwt = require('jsonwebtoken');
 
-var user = {};
-
-passport.use(new LocalStrategy(function(user, done) {
-  User.findOne({ email: email }, function(err, user) {
-    if (err) return done(err);
-    if (!user) return done(null, false, { message: 'Incorrect username.' });
-    user.comparePassword(password, function(err, isMatch) {
-      if (isMatch) {
-        return done(null, user);
-      } else {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-    });
-  });
-}));
-
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);
-  });
-});
 
 app.post('/login', function(req, res, next) {
     const { email, password } = req.body;
@@ -55,13 +30,13 @@ app.post('/login', function(req, res, next) {
                     success: true,
                     token: generatedToken
                 });
-            } else {
-                res.status(401).json({
-                    success: false,
-                    code: 'DD101_API_ERROR_02',
-                    message: err || 'User does not exists.'
-                });
-            }
+            }else{
+              res.status(401).json({
+                success: false,
+                code: 'DD101_API_ERROR_02',
+                message: err || 'E-mail and/or password invalid.'
+            })
+          }
         }
         
        db.findUser({email}, handler);

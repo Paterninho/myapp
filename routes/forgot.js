@@ -19,16 +19,19 @@ app.post('/forgot', function(req, res, next) {
       },
       function(token, done) {
         db.findUser({ email: req.body.email }, function(err, user) {
-          if (!user) {
-            req.flash('error', 'Não foi possivel localizar o e-email informado.');
-            return res.redirect('http://localhost:4200/#/pages/forgot-password');
-          }
+          if(!user){
+            res.status(401).json({
+                success: false,
+                code: 'DD101_API_ERROR_01',
+                message: 'Não foi possivel localizar o e-email informado.'
+            });
+        } 
+
           user.resetPasswordToken = token;
           user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
          
           db.save(user)
-          console.log(user);
-            done(err, token, user);
+          done(err, token, user);
           });
       },
       function(token, user, done) {
@@ -48,7 +51,11 @@ app.post('/forgot', function(req, res, next) {
           'http://localhost:4200/#/app/forms?token=' + token + '\n\n'
         };
         smtpTransport.sendMail(mailOptions, function(err) {
-          req.flash('info', 'Um e-mail foi enviado para ' + user.email + ' com as instruções.');
+          res.json({
+            success: true,
+            message: 'Um e-mail foi enviado para ' + user.email + ' com as instruções.'
+        });
+
           done(err, 'done');
         });
       }
@@ -61,12 +68,17 @@ app.post('/forgot', function(req, res, next) {
   app.get('/reset/:token', function(req, res) {
     db.find({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
       if (!user) {
-        req.flash('error', 'O token para resetar sua senha não é valido ou expirou.');
+        res.status(401).json({
+          success: false,
+          code: 'DD101_API_ERROR_01',
+          message: 'O token para resetar sua senha não é valido ou expirou.'
+      });
         return res.redirect('http://localhost:4200/#/pages/forgot-password');
-      }
+      }else{
       res.render('http://localhost:4200/#/app/forms', {
         user: req.user
       });
+    }
     });
   });
   
@@ -74,12 +86,14 @@ app.post('/forgot', function(req, res, next) {
     async.waterfall([
       function(done) {
         db.find({resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
-          if (!user) {
-            console.log('error', 'O token para resetar sua senha não é valido ou expirou.');
-            req.flash('error', 'O token para resetar sua senha não é valido ou expirou.');
-            return res.redirect('back');
-          }
-
+          if(!user){
+            res.status(401).json({
+                success: false,
+                code: 'DD101_API_ERROR_01',
+                message: 'O token para resetar sua senha não é valido ou expirou.'
+            });
+        }   
+         
           user.password = bcrypt.hashSync(req.body.password, config.SALT_ROUNDS);
           user.resetPasswordToken = undefined;
           user.resetPasswordExpires = undefined;
@@ -105,7 +119,10 @@ app.post('/forgot', function(req, res, next) {
             'Esta é a confirmação que a senha do seu usuário ' + user.email + ' foi alterada.\n'
         };
         smtpTransport.sendMail(mailOptions, function(err) {
-          req.flash('success', 'Sucesso! Sua senha foi alterada.');
+          res.json({
+            success: true,
+            message: 'Sucesso! Sua senha foi alterada.'
+        });
           done(err);
         });
       }

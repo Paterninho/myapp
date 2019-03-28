@@ -37,6 +37,11 @@ module.exports = {
             handler(err, result);
         })
     },
+
+    findOne: (data) => {
+        collection.findOne(data)
+    },
+
     find:(data, handler) => {
         forgot.findOne(data, (err, result) => {
             handler(err, result);
