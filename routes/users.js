@@ -24,13 +24,37 @@ const handleToken = (req, res, next) => {
     })
   }
 
-app.post('/signup', function(req, res) {
+  app.post('/findUser', function(req, res) {
+
     const { username, email, password } = req.body;
- 
-    if(password.length < 8){
-      res.status(401).json({
+
+    const handler = (err, result) => {
+      if (!result) {
+        res.json({
+          success: true,
+          message: 'Cadastro Liberado.',
+        });
+      } else {
+        res.json({
+          success: false,
+          message: 'Email Ja Cadastrado.',
+        });
+      }
+    }
+
+    db.findUser({email}, handler);
+  
+  });
+
+
+app.post('/signup', function(req, res) {
+
+  const { username, email, password } = req.body;
+  
+  if(password.length < 8){
+      console.log("nop"); 
+      res.json({
         success: false,
-        code: '42_API_ERROR_01',
         message: 'Informe uma senha com no minimo 8 caracteres.',
       });  
       
@@ -63,7 +87,7 @@ app.post('/signup', function(req, res) {
 
     db.register(dataToInsert, handler);
   
-  }
+    }    
 });
 
 app.put('/edit/(:id)', function(req, res, next) {

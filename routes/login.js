@@ -44,9 +44,8 @@ app.post('/login', function(req, res, next) {
     }
   });
 
-  app.get('/verifytoken', (req, res, next) => {
-    //[0] = Bearer ----  [1] = token
-    let token = req.headers['authorization'].split(' ')[1];
+  app.post('/verifytoken', (req, res, next) => {
+    const { token } = req.body
     jwt.verify(token, config.JWT_KEY, (err, decode) => {
         if(!err){
             res.json({
@@ -54,7 +53,7 @@ app.post('/login', function(req, res, next) {
                 message: 'Token is valid.'
             });
         } else {
-            res.status(401).json({
+            res.json({
                 success: false,
                 error: err
             });
