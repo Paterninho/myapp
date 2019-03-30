@@ -42,7 +42,7 @@ app.post('/signup', function(req, res) {
         success: false,
         message: 'Os campos de senha não conferem.',
       });  
-      
+
     }else{
 
     const hash = bcrypt.hashSync(password, config.SALT_ROUNDS);
@@ -51,7 +51,7 @@ app.post('/signup', function(req, res) {
       name: username,
       email,
       password: hash,
-
+      nickname
     };
   
     const handler = (err, result) => {
