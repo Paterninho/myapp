@@ -1,11 +1,8 @@
 var express = require('express');
 var app = express.Router();
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
 var db = require('../db');
 const config = require('../config');
 var bcrypt = require('bcrypt');
-
 var jwt = require('jsonwebtoken');
 
 
@@ -34,7 +31,7 @@ app.post('/login', function(req, res, next) {
               res.status(401).json({
                 success: false,
                 code: 'DD101_API_ERROR_02',
-                message: err || 'E-mail and/or password invalid.'
+                message: err || 'E-mail e/ou Senha é invalido.'
             })
           }
         }
@@ -44,18 +41,19 @@ app.post('/login', function(req, res, next) {
     }
   });
 
-  app.post('/verifytoken', (req, res, next) => {
+  app.post('/verifytoken', (req, res) => {
     const { token } = req.body
-    jwt.verify(token, config.JWT_KEY, (err, decode) => {
+    jwt.verify(token, config.JWT_KEY, (err) => {
         if(!err){
             res.json({
                 success: true,
-                message: 'Token is valid.'
+                message: 'Token é Válido.'
             });
         } else {
             res.json({
                 success: false,
-                error: err
+                error: err,
+                message: 'Usuário não esta logado no sistema.'
             });
         }
     })

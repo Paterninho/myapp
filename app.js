@@ -44,8 +44,6 @@ app.use('/login', login);
 app.use('/users', users);
 app.use('/forgot', forgot);
 
-// Routes
-
 app.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
 });

@@ -2,12 +2,10 @@ var express = require('express');
 var app = express.Router();
 var async = require('async');
 var crypto = require('crypto');
-var mongoose = require('mongoose');
 var nodemailer = require('nodemailer');
-
 var db = require('../db');
-const config = require('../config');
 var bcrypt = require('bcrypt');
+var config = require('../config');
 
 app.post('/forgot', function(req, res, next) {
     async.waterfall([
@@ -28,7 +26,7 @@ app.post('/forgot', function(req, res, next) {
         } 
 
           user.resetPasswordToken = token;
-          user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+          user.resetPasswordExpires = Date.now() + 3600000;
          
           db.save(user)
           done(err, token, user);

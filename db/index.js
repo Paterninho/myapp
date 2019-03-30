@@ -7,12 +7,12 @@ var forgot;
 
 MongoClient.connect(config.MONGO_URL, (err, dataBase) => {
     if(!err){
-        console.log('Connection established to MongoDB.');
+        console.log('Conexão estabelecida com o banco de dados.');
         db = dataBase;
         collection = db.collection('users');
         forgot = db.collection('forgot')
     } else {
-        console.log('Not possible to established the connection to MongoDB.')
+        console.log('Não foi possível estabelecer conexão com o banco de dados.')
     }
 });
 

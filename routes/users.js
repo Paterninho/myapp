@@ -4,29 +4,8 @@ var bcrypt = require('bcrypt');
 const config = require('../config');
 var db = require('../db');
 
-
-const handleToken = (req, res, next) => {
-    //if authenticated and valid token
-    //return next
-    //if not 401
-    //[0] = Bearer ----  [1] = token
-    let token = req.headers['authorization'].split(' ')[1];
-    
-    jwt.verify(token, config.JWT_KEY, (err, decode) => {
-      if (!err) {
-        next();
-      } else {
-        res.status(401).json({
-          success: false,
-          error: err
-        });
-      }
-    })
-  }
-
-  app.post('/findUser', function(req, res) {
-
-    const { username, email, password } = req.body;
+ app.post('/findUser', function(req, res) {
+    const {email} = req.body;
 
     const handler = (err, result) => {
       if (!result) {
@@ -49,7 +28,7 @@ const handleToken = (req, res, next) => {
 
 app.post('/signup', function(req, res) {
 
-  const { username, email, password } = req.body;
+  const { username, email, password, nickname, confirmepw } = req.body;
   
   if(password.length < 8){
       console.log("nop"); 
@@ -58,27 +37,34 @@ app.post('/signup', function(req, res) {
         message: 'Informe uma senha com no minimo 8 caracteres.',
       });  
       
+    }else if(password != confirmepw){
+      res.json({
+        success: false,
+        message: 'Os campos de senha não conferem.',
+      });  
+      
     }else{
-  
+
     const hash = bcrypt.hashSync(password, config.SALT_ROUNDS);
   
     const dataToInsert = {
       name: username,
       email,
-      password: hash
+      password: hash,
+
     };
   
     const handler = (err, result) => {
       if (!err) {
         res.json({
           success: true,
-          message: 'User registered.',
+          message: 'Usuário Cadastrado com sucesso.',
           data: result
         });
       } else {
         res.json({
           success: false,
-          message: 'User not registered.',
+          message: 'Erro ao Cadastrar Usuário.',
           error: err
         });
       }
@@ -109,8 +95,6 @@ app.put('/edit/(:id)', function(req, res, next) {
       req.db.collection('users').update({"_id": o_id}, user, function(err, result) {
           if (err) {
               req.flash('error', err)
-              
-              // render to views/user/edit.ejs
               res.render('user/edit', {
                   title: 'Edit User',
                   id: req.params.id,
@@ -122,11 +106,11 @@ app.put('/edit/(:id)', function(req, res, next) {
               req.flash('success', 'Dados atualizados com Sucessos!')
               
               res.redirect('/users')
-
           }
-      })        
-  }
-  else {
+      })
+
+  }else{
+
       var error_msg = ''
       errors.forEach(function(error) {
           error_msg += error.msg + '<br>'
