@@ -6,7 +6,6 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 //var favicon = require('serve-favicon');
 var mongoose = require('mongoose');
-//var nodemailer = require('nodemailer');
 var passport = require('passport');
 var flash = require('express-flash');
 var login = require('./routes/login');
@@ -27,6 +26,7 @@ app.all("/*", function(req, res, next){
 app.set('port', process.env.PORT || 3002);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
 
 //app.use(favicon());
 app.use(logger('dev'));

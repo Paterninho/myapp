@@ -6,7 +6,7 @@ var db = require('../db');
 
  app.post('/findUser', function(req, res) {
     const {email} = req.body;
-
+  
     const handler = (err, result) => {
       if (!result) {
         res.json({
@@ -15,8 +15,33 @@ var db = require('../db');
         });
       } else {
         res.json({
+          usr: result,
           success: false,
           message: 'Email Ja Cadastrado.',
+        });
+      }
+    }
+
+    db.findUser({email}, handler);
+  
+  });
+
+  app.post('/findEmail', function(req, res) {
+    const {email} = req.body;
+  
+    const handler = (err, result) => {
+      if (!result) {
+        res.json({
+          success: false,
+          message: 'Usuario não Encontrado.',
+        });
+      } else {
+        res.json({
+          name: result.name,
+          email: result.email,
+          nickname: result.nickname,
+          success: true,
+          message: 'Email Cadastrado.',
         });
       }
     }

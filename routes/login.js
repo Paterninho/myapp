@@ -25,19 +25,20 @@ app.post('/login', function(req, res, next) {
                 let generatedToken = jwt.sign(tokenData, config.JWT_KEY, {  expiresIn: '1m'});
                 res.json({
                     success: true,
-                    token: generatedToken
+                    token: generatedToken,
+                    email: result.email,
                 });
             }else{
               res.status(401).json({
                 success: false,
                 code: 'DD101_API_ERROR_02',
                 message: err || 'E-mail e/ou Senha é invalido.'
+
             })
           }
         }
         
        db.findUser({email}, handler);
-
     }
   });
 
