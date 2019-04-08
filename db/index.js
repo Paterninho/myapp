@@ -1,5 +1,6 @@
 var config = require('../config');
 var MongoClient = require('mongodb').MongoClient;
+var ObjectID = require('mongodb').ObjectID;
 
 var db;
 var collection;
@@ -20,6 +21,12 @@ module.exports = {
 
     update:(data) => {
         collection.save(data)
+    },
+
+    updateOne: (id, data, handler) => {
+        collection.update({_id: ObjectID(id)}, {$set: data}, (err, result) => {
+            handler(err, result);
+        })
     },
 
     save: (data) => {
