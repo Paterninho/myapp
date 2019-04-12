@@ -9,9 +9,8 @@ var jwt = require('jsonwebtoken');
 app.post('/login', function(req, res, next) {
     const { email, password } = req.body;
     if( email === undefined || password === undefined ){
-        res.status(401).json({
+        res.json({
             success: false,
-            code: 'DD101_API_ERROR_01',
             message: "E-mail and/or password invalid."
         });
     } else {
@@ -29,10 +28,9 @@ app.post('/login', function(req, res, next) {
                     email: result.email,
                 });
             }else{
-              res.status(401).json({
+              res.json({
                 success: false,
-                code: 'DD101_API_ERROR_02',
-                message: err || 'E-mail e/ou Senha é invalido.'
+                message: 'E-mail e/ou Senha é invalido.'
 
             })
           }
