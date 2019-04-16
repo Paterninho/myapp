@@ -41,6 +41,7 @@ var date = require('date-and-time');
           id: result._id,
           name: result.name,
           pw: result.password,
+          status: result.status,
           success: true,
           message: 'Email Cadastrado.',
         });
@@ -77,7 +78,7 @@ var date = require('date-and-time');
   });
 
   app.post('/updateUser', function(req, res) {
-
+    
   const {username, email, password, newpassword, confirmenewpw, _id } = req.body;
 
   if(password != undefined && newpassword != undefined && confirmenewpw != undefined){
@@ -117,8 +118,7 @@ var date = require('date-and-time');
               success: true,
               message: 'Usuário Alterado com Sucesso.',
               data: result
-            });
-     
+            });    
        } else {
           res.json({
             success: false,
@@ -133,7 +133,7 @@ var date = require('date-and-time');
   }else{
     res.json({
       success: false,
-      message: 'Senha Atual Inoformada é Invalida.',
+      message: 'Senha Atual Informada é Invalida.',
       error: err
     });
   }
