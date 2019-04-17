@@ -46,7 +46,7 @@ app.post('/forgot', function(req, res, next) {
           from: 'projeto42senai@gmail.com',
           subject: 'Não entre em pânico! ',
           text: 'Este email foi enviado porque a função "Esqueceu a senha" foi aplicada à sua conta. Para definir uma nova senha clique no link abaixo:\n\n' +
-          'http://localhost:4200/#/app/forms?token=' + token + '\n\n'
+          'http://localhost:4200/#/pages/altera-senha?token=' + token + '\n\n'
         };
         smtpTransport.sendMail(mailOptions, function(err) {
           res.json({
@@ -111,7 +111,7 @@ app.post('/forgot', function(req, res, next) {
         });
         var mailOptions = {
           to: user.email,
-          from: 'passwordreset@demo.com',
+          from: 'projeto42senai@gmail.com',
           subject: 'Sua senha foi alterada',
           text: 'Ola,\n\n' +
             'Esta é a confirmação que a senha do seu usuário ' + user.email + ' foi alterada.\n'
@@ -119,7 +119,7 @@ app.post('/forgot', function(req, res, next) {
         smtpTransport.sendMail(mailOptions, function(err) {
           res.json({
             success: true,
-            message: 'Sucesso! Sua senha foi alterada.'
+            message: 'Sua senha foi alterada.'
         });
           done(err);
         });
