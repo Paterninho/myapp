@@ -6,89 +6,97 @@
   var date = require('date-and-time');
 
   app.post('/findUser', function(req, res) {
-      const {email} = req.body;
-    
-      const handler = (err, result) => {
-        if (!result) {
-          res.json({
-            success: true,
-            message: 'Cadastro Liberado.',
-          });
-        } else {
-          res.json({
-            usr: result,
-            success: false,
-            message: 'Email Ja Cadastrado.',
-          });
-        }
+    const {email} = req.body;
+  
+    const handler = (err, result) => {
+      if (!result) {
+        res.json({
+          success: true,
+          message: 'Cadastro Liberado.',
+        });
+      } else {
+        res.json({
+          usr: result,
+          success: false,
+          message: 'Email Ja Cadastrado.',
+        });
       }
+    }
 
-      db.findUser({email}, handler);
-    
-    });
+    db.findUser({email}, handler);
+  
+  });
 
-    app.post('/findEmail', function(req, res) {
-      const {email} = req.body;
-      const handler = (err, result) => {
-        if (!result) {
-          console.log('ela desviou e comi quem ta lendo')
-          res.json({
-            success: false,
-            message: 'Usuario não Encontrado.',
-          });
-        } else {
-          var ret = {
-            email: result.email,
-            id: result._id,
-            name: result.name,
-            status: result.status,
-            success: true,
-            message: 'Email Cadastrado.',
-          }
-          console.log(`comi a mae do ${ret.name}`)
-          res.json(ret);
-        }
-        
+  app.post('/findEmail', function(req, res) {
+    const {email} = req.body;
+    const handler = (err, result) => {
+      if (!result) {
+        res.json({
+          success: false,
+          message: 'Usuario não Encontrado.',
+        });
+      } else {
+        res.json({
+          email: result.email,
+          id: result._id,
+          name: result.name,
+          pw: result.password,
+          status: result.status,
+          success: true,
+          message: 'Email Cadastrado.',
+        });
       }
-
-      db.findUser({email}, handler);
-    
-    });
-
-    app.post('/listusers', (req, res, next) => {
-      const handler = (err, result) => {
-        if (!err && result != null) {
-          result.toArray((err, users) => {
-            if(!err){
-              res.json({
-                success: true,
-                data: users
-              });
-            }
-          })
-        } else {
-          res.json({
-            success: false,
-            message: 'An error happened.',
-            error: err
-          });
-        }
-      }
-    
-      db.findAll(handler);
-    
-    });
-
-    app.post('/updateUser', function(req, res) {
       
+    }
+
+    db.findUser({email}, handler);
+  
+  });
+
+  app.post('/listusers', (req, res, next) => {
+    const handler = (err, result) => {
+      if (!err && result != null) {
+        result.toArray((err, users) => {
+          if(!err){
+            res.json({
+              success: true,
+              data: users
+            });
+          }
+        })
+      } else {
+        res.json({
+          success: false,
+          message: 'An error happened.',
+          error: err
+        });
+      }
+    }
+  
+    db.findAll(handler);
+  
+  });
+
+  app.post('/updateUser', function(req, res) {
+    
     const {username, email, password, newpassword, confirmenewpw, _id } = req.body;
 
-    if(password != undefined && newpassword != undefined && confirmenewpw != undefined){
-    db.findOne({email}, function(err, user) {
-    var result = bcrypt.compareSync(password, user.password);
+    if(password === undefined){
+      res.json({
+        success: false,
+        message: 'Informe sua Senha para Efetual a Alteração!',
+      });
+      return;
+    }
+    
+    db.findUser({email}, function(err, user) {
 
+    var result = bcrypt.compareSync(password, user.password);
+  
     if (result) {
 
+     if(newpassword != undefined && confirmenewpw != undefined){
+  
       if(newpassword.length < 8){
         res.json({
           success: false,
@@ -96,7 +104,7 @@
         });
         return;
       }
-
+  
       if(newpassword != confirmenewpw){
         res.json({
           success: false,
@@ -104,7 +112,7 @@
         }); 
         return;
       }
-
+  
       const hash = bcrypt.hashSync(newpassword, config.SALT_ROUNDS);
         
           const dataToInsert = {
@@ -112,14 +120,15 @@
             email,
             password: hash,
           };
-
+  
           const handler = (err, result) => {
             if (!err) {
               res.json({
                 success: true,
                 message: 'Usuário Alterado com Sucesso.',
+                data: result
               });    
-        } else {
+         } else {
             res.json({
               success: false,
               message: 'Erro ao Alterar Usuário.',
@@ -127,44 +136,46 @@
             });
           }
       }
-
+  
       db.updateOne(_id, dataToInsert, handler);
-      
-    }else{
-      res.json({
-        success: false,
-        message: 'Senha Atual Informada é Invalida.',
-        error: err
-      });
-    }
-  })
-      }else{
 
-        const dataToInsert = {
-          name: username,
-          email,
-        };
-      
-        const handler = (err, result) => {
-          if (!err) {
-            res.json({
-              success: true,
-              message: 'Usuário Alterado com sucesso.',
-            });
-          } else {
-            res.json({
-              success: false,
-              message: 'Erro ao Alterar Usuário.',
-              error: err
-            });
-            }
-      
+    }else{
+  
+      const dataToInsert = {
+        name: username,
+        email,
+      };
+    
+      const handler = (err, result) => {
+        if (!err) {
+          res.json({
+            success: true,
+            message: 'Usuário Alterado com sucesso.',
+            data: result
+          });
+        } else {
+          res.json({
+            success: false,
+            message: 'Erro ao Alterar Usuário.',
+            error: err
+          });
         }
     
-        db.updateOne(_id, dataToInsert, handler);
-      }  
-  });
+      }
+  
+      db.updateOne(_id, dataToInsert, handler);
+    }  
 
+  }else{
+    res.json({
+      success: false,
+      message: 'Senha Atual Informada é Invalida.',
+      error: err
+    });
+  }
+})
+
+  });
 
   app.post('/signup', function(req, res) {
 
