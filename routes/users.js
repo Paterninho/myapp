@@ -84,7 +84,7 @@
     if(password === undefined){
       res.json({
         success: false,
-        message: 'Informe sua Senha para Efetual a Alteração!',
+        message: 'Informe sua Senha para Efetuar a Alteração!',
       });
       return;
     }

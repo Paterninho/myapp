@@ -95,7 +95,6 @@ app.post('/forgot', function(req, res, next) {
           user.password = bcrypt.hashSync(req.body.password, config.SALT_ROUNDS);
           user.resetPasswordToken = undefined;
           user.resetPasswordExpires = undefined;
-          console.log(user);
 
           db.update(user)
             done(err, user);
