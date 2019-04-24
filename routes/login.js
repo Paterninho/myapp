@@ -11,7 +11,7 @@ app.post('/login', function(req, res, next) {
     if( email === undefined || password === undefined ){
         res.json({
             success: false,
-            message: "E-mail and/or password invalid."
+            message: "E-mail e/ou senha é invalido."
         });
     } else {
 
@@ -19,18 +19,19 @@ app.post('/login', function(req, res, next) {
             if(!err && result !== null && bcrypt.compareSync(password, result.password)){
                 let tokenData = {
                     name: result.name,
-                    email: result.email
+                    email: result.email,
                 }
                 let generatedToken = jwt.sign(tokenData, config.JWT_KEY, {  expiresIn: '1m'});
                 res.json({
                     success: true,
                     token: generatedToken,
                     email: result.email,
+                    status: result.status,
                 });
             }else{
               res.json({
                 success: false,
-                message: 'E-mail e/ou Senha é invalido.'
+                message: 'E-mail e/ou senha é invalido.'
 
             })
           }
@@ -46,7 +47,7 @@ app.post('/login', function(req, res, next) {
         if(!err){
             res.json({
                 success: true,
-                message: 'Token é Válido.'
+                message: 'Token é válido.'
             });
         } else {
             res.json({

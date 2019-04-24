@@ -6,6 +6,7 @@ var nodemailer = require('nodemailer');
 var db = require('../db');
 var bcrypt = require('bcrypt');
 var config = require('../config');
+var date = require('date-and-time');
 
 app.post('/forgot', function(req, res, next) {
     async.waterfall([
@@ -27,6 +28,9 @@ app.post('/forgot', function(req, res, next) {
 
           user.resetPasswordToken = token;
           user.resetPasswordExpires = Date.now() + 3600000;
+          user.dataResete = date.format(new Date(), 'DD/MM/YYYY HH:mm:ss');
+
+
          
           db.save(user)
           done(err, token, user);
@@ -93,8 +97,8 @@ app.post('/forgot', function(req, res, next) {
         }   
          
           user.password = bcrypt.hashSync(req.body.password, config.SALT_ROUNDS);
-          user.resetPasswordToken = undefined;
-          user.resetPasswordExpires = undefined;
+          delete user.resetPasswordToken;
+          delete user.resetPasswordExpires;
 
           db.update(user)
             done(err, user);

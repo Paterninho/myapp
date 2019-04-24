@@ -12,13 +12,13 @@
       if (!result) {
         res.json({
           success: true,
-          message: 'Cadastro Liberado.',
+          message: 'Cadastro liberado.',
         });
       } else {
         res.json({
           usr: result,
           success: false,
-          message: 'Email Ja Cadastrado.',
+          message: 'Email ja cadastrado.',
         });
       }
     }
@@ -33,7 +33,7 @@
       if (!result) {
         res.json({
           success: false,
-          message: 'Usuario não Encontrado.',
+          message: 'Usuario não encontrado.',
         });
       } else {
         res.json({
@@ -43,7 +43,7 @@
           pw: result.password,
           status: result.status,
           success: true,
-          message: 'Email Cadastrado.',
+          message: 'Email cadastrado.',
         });
       }
       
@@ -67,7 +67,7 @@
       } else {
         res.json({
           success: false,
-          message: 'An error happened.',
+          message: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
           error: err
         });
       }
@@ -77,6 +77,63 @@
   
   });
 
+  app.post('/updateADM', function(req, res){
+
+    const {id, perfil} = req.body;
+
+    if(perfil === 'Inativo'){
+
+      const dataToInsert = {
+        perfil,
+      };
+
+      const handler = (err, result) => {
+        if (!err) {
+          res.json({
+            success: true,
+            message: 'Usuário alterado com sucesso.',
+            data: result
+          });    
+     } else {
+        res.json({
+          success: false,
+          message: 'Erro ao alterar usuário.',
+          error: err
+        });
+      }
+  }
+
+  db.updateOne(id, dataToInsert, handler);
+
+    }else if(perfil != 'Inativo'){
+
+      const dataToInsert = {
+        status: 'Ativo',
+        perfil: perfil,
+      };
+
+      const handler = (err, result) => {
+        if (!err) {
+          res.json({
+            success: true,
+            message: 'Usuário alterado com sucesso.',
+            data: result
+          });    
+     } else {
+        res.json({
+          success: false,
+          message: 'Erro ao alterar usuário.',
+          error: err
+        });
+      }
+  }
+
+  db.updateOne(id, dataToInsert, handler);
+
+    }
+  });
+
+
   app.post('/updateUser', function(req, res) {
     
     const {username, email, password, newpassword, confirmenewpw, _id } = req.body;
@@ -84,7 +141,7 @@
     if(password === undefined){
       res.json({
         success: false,
-        message: 'Informe sua Senha para Efetuar a Alteração!',
+        message: 'Informe sua senha para efetuar a alteração.',
       });
       return;
     }
@@ -100,7 +157,7 @@
       if(newpassword.length < 8){
         res.json({
           success: false,
-          message: 'Informe uma senha com Pelo Menos 8 Digitos.',
+          message: 'Informe uma senha com pelo menos 8 digitos.',
         });
         return;
       }
@@ -108,7 +165,7 @@
       if(newpassword != confirmenewpw){
         res.json({
           success: false,
-          message: 'Os Campos da Nova Senha não Conferem.',
+          message: 'Os campos da nova senha não conferem.',
         }); 
         return;
       }
@@ -125,13 +182,13 @@
             if (!err) {
               res.json({
                 success: true,
-                message: 'Usuário Alterado com Sucesso.',
+                message: 'Usuário alterado com sucesso.',
                 data: result
               });    
          } else {
             res.json({
               success: false,
-              message: 'Erro ao Alterar Usuário.',
+              message: 'Erro ao alterar usuário.',
               error: err
             });
           }
@@ -150,13 +207,13 @@
         if (!err) {
           res.json({
             success: true,
-            message: 'Usuário Alterado com sucesso.',
+            message: 'Usuário alterado com sucesso.',
             data: result
           });
         } else {
           res.json({
             success: false,
-            message: 'Erro ao Alterar Usuário.',
+            message: 'Erro ao alterar usuário.',
             error: err
           });
         }
@@ -169,7 +226,7 @@
   }else{
     res.json({
       success: false,
-      message: 'Senha Atual Informada é Invalida.',
+      message: 'Senha atual informada é invalida.',
       error: err
     });
   }
@@ -197,7 +254,8 @@
 
       var created = date.format(new Date(), 'DD/MM/YYYY');   
 
-      var status = "User";
+      var perfil = "User";
+      var status = "Ativo";
 
       const hash = bcrypt.hashSync(password, config.SALT_ROUNDS);
     
@@ -206,6 +264,7 @@
         email,
         password: hash,
         created,
+        perfil,
         status,
       };
     
@@ -213,13 +272,13 @@
         if (!err) {
           res.json({
             success: true,
-            message: 'Usuário Cadastrado com sucesso.',
+            message: 'Usuário cadastrado com sucesso.',
             data: result
           });
         } else {
           res.json({
             success: false,
-            message: 'Erro ao Cadastrar Usuário.',
+            message: 'Erro ao cadastrar usuário.',
             error: err
           });
         }
