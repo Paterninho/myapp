@@ -84,7 +84,7 @@
     if(perfil === 'Inativo'){
 
       const dataToInsert = {
-        perfil,
+        status: perfil,
       };
 
       const handler = (err, result) => {

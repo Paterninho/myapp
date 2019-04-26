@@ -29,8 +29,6 @@ app.post('/forgot', function(req, res, next) {
           user.resetPasswordToken = token;
           user.resetPasswordExpires = Date.now() + 3600000;
           user.dataResete = date.format(new Date(), 'DD/MM/YYYY HH:mm:ss');
-
-
          
           db.save(user)
           done(err, token, user);
