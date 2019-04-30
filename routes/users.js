@@ -42,6 +42,7 @@
           name: result.name,
           pw: result.password,
           status: result.status,
+          perfil: result.perfil,
           success: true,
           message: 'Email cadastrado.',
         });
