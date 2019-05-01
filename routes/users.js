@@ -78,6 +78,54 @@
   
   });
 
+  app.post('/updateADMPW', function(req, res){
+
+    const {id, newpassword, confirmepassword} = req.body;
+
+    if(newpassword.length < 8){
+      res.json({
+        success: false,
+        message: 'Informe uma senha com pelo menos 8 digitos.',
+      });
+      return;
+    }
+
+        if(newpassword != confirmepassword){
+          res.json({
+            success: false,
+            message: 'Os campos de senha não conferem.',
+          }); 
+          return;
+          
+        }else{
+
+        const hash = bcrypt.hashSync(newpassword, config.SALT_ROUNDS);
+
+        const dataToInsert = {
+          password: hash,
+        };
+
+        const handler = (err, result) => {
+          if (!err) {
+            res.json({
+              success: true,
+              message: 'Usuário alterado com sucesso.',
+              data: result
+            });    
+      } else {
+          res.json({
+            success: false,
+            message: 'Erro ao alterar usuário.',
+            error: err
+          });
+        }
+    }
+
+    db.updateOne(id, dataToInsert, handler);
+      
+    }
+});
+
   app.post('/updateADM', function(req, res){
 
     const {id, perfil} = req.body;
