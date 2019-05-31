@@ -11,6 +11,7 @@ var flash = require('express-flash');
 var login = require('./routes/login');
 var forgot = require('./routes/forgot');
 var users = require('./routes/users');
+var Mysql = require('./db/Mysql');
 
 var app = express();
 
@@ -43,6 +44,7 @@ app.use(bodyParser.urlencoded({extended: true}) );
 app.use('/login', login);
 app.use('/users', users);
 app.use('/forgot', forgot);
+app.use('/Mysql', Mysql);
 
 app.listen(app.get('port'), function() {
   console.log('Express server listening on port ' + app.get('port'));
