@@ -15,9 +15,8 @@ app.post('/clientes', function(req, res) {
     connection.query(sqlQry, function(error, results, fields){
       if(error){
         res.json(error);
-      }else{
+      } else{
         res.json(results);
-        connection.end();
       }
         
     });
