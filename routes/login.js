@@ -21,7 +21,7 @@ app.post('/login', function(req, res, next) {
                     name: result.name,
                     email: result.email,
                 }
-                let generatedToken = jwt.sign(tokenData, config.JWT_KEY, {  expiresIn: '1m'});
+                let generatedToken = jwt.sign(tokenData, config.JWT_KEY, {  expiresIn: '1000m'});
                 res.json({
                     success: true,
                     token: generatedToken,
