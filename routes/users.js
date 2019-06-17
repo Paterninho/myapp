@@ -5,28 +5,6 @@
   var db = require('../db');
   var date = require('date-and-time');
 
-  app.post('/findUser', function(req, res) {
-    const {email} = req.body;
-  
-    const handler = (err, result) => {
-      if (!result) {
-        res.json({
-          success: true,
-          message: 'Cadastro liberado.',
-        });
-      } else {
-        res.json({
-          usr: result,
-          success: false,
-          message: 'Email ja cadastrado.',
-        });
-      }
-    }
-
-    db.findUser({email}, handler);
-  
-  });
-
   app.post('/findEmail', function(req, res) {
     const {email} = req.body;
     const handler = (err, result) => {
@@ -185,7 +163,7 @@
 
   app.post('/updateUser', function(req, res) {
     
-    const {username, email, password, newpassword, confirmenewpw, _id } = req.body;
+    const {username, email, password, newpassword, confirmenewpw, id } = req.body;
 
     if(password === undefined){
       res.json({
@@ -243,7 +221,7 @@
           }
       }
   
-      db.updateOne(_id, dataToInsert, handler);
+      db.updateOne(id, dataToInsert, handler);
 
     }else{
   
@@ -269,7 +247,7 @@
     
       }
   
-      db.updateOne(_id, dataToInsert, handler);
+      db.updateOne(id, dataToInsert, handler);
     }  
 
   }else{
