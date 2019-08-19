@@ -1,3 +1,4 @@
+var weka = require('./lib/weka-lib.js');
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -11,15 +12,15 @@ var flash = require('express-flash');
 var login = require('./routes/login');
 var forgot = require('./routes/forgot');
 var users = require('./routes/users');
-var Mysql = require('./db/Mysql');
+
 
 var app = express();
 
-app.all("/*", function(req, res, next){
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-  next();
+app.all("/*", function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    next();
 });
 
 // Middleware
@@ -40,14 +41,14 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}) );
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/login', login);
 app.use('/users', users);
 app.use('/forgot', forgot);
-app.use('/Mysql', Mysql);
+app.use(weka)
 
 app.listen(app.get('port'), function() {
-  console.log('Express server listening on port ' + app.get('port'));
+    console.log('Express server listening on port ' + app.get('port'));
 });
 
 module.exports = app;
