@@ -1,15 +1,31 @@
+var express = require('express');
+var app = express.Router();
+const config = require('../config');
 var _ = require('underscore');
 
 var weka = require('../lib/weka-lib.js');
 
 var arff = require('node-arff');
 
+
+
 var data
     //ARFF json format (see [node-arff](https://github.com/chesles/node-arff))
 
 //See Weka Documentation
-
-
+/*
+app.post('/iaback', function(req, res) {
+    console.log('aaaaaa');
+    var retorno={};
+    arff.load('./datasets/teste.arff', function(err, data){retorno = data;});
+    
+    res.json({
+        success: true,
+        message: 'sei la.',
+        data : retorno
+      });
+},
+*/
 function simplesCassificacao(file, classifier, cb) {
     arff.load(file, function(err, data) {
 
@@ -46,11 +62,21 @@ function simplesCassificacao(file, classifier, cb) {
         weka.classify(data, testData, options, function(err, result) {
             console.log("Deu Erro:" + err)
             console.log("Resultado:" + JSON.stringify(result)); //{ predicted: 'yes', prediction: '1' }
-
+            if (result) {
+                res.json({
+                  success: true,
+                  message: 'Usuario não encontrado.',
+                  data: result,
+                });
+              }
         });
     });
 }
 
 simplesCassificacao('./datasets/teste.arff', 'weka.classifiers.bayes.NaiveBayes', function(err) {
+
     console.log("Deu Erro:" + err);
 });
+//});
+
+//module.exports = app;

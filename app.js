@@ -12,6 +12,7 @@ var flash = require('express-flash');
 var login = require('./routes/login');
 var forgot = require('./routes/forgot');
 var users = require('./routes/users');
+var iateste = require('./routes/iateste');
 
 
 var app = express();
@@ -45,6 +46,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/login', login);
 app.use('/users', users);
 app.use('/forgot', forgot);
+app.use('/iateste', iateste);
 app.use(weka)
 
 app.listen(app.get('port'), function() {
