@@ -5,13 +5,15 @@ var ObjectID = require('mongodb').ObjectID;
 var db;
 var collection;
 var forgot;
+var base;
 
 MongoClient.connect(config.MONGO_URL, (err, dataBase) => {
     if(!err){
         console.log('Conexão estabelecida com o banco de dados.');
         db = dataBase;
         collection = db.collection('users');
-        forgot = db.collection('forgot')
+        forgot = db.collection('forgot');
+        base = db.collection('sei la');
     } else {
         console.log('Não foi possível estabelecer conexão com o banco de dados.')
     }
@@ -57,6 +59,12 @@ module.exports = {
 
     findAll: (handler) => {
         collection.find((err, result) => {
+            handler(err, result);
+        })
+    },
+
+    AllBases: (handler) => {
+        base.find((err, result) => {
             handler(err, result);
         })
     }

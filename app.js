@@ -9,6 +9,7 @@ var session = require('express-session');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash = require('express-flash');
+var index = require('./routes/index');
 var login = require('./routes/login');
 var forgot = require('./routes/forgot');
 var users = require('./routes/users');
@@ -47,6 +48,7 @@ app.use('/login', login);
 app.use('/users', users);
 app.use('/forgot', forgot);
 app.use('/iateste', iateste);
+app.use('/index', index);
 app.use(weka)
 
 app.listen(app.get('port'), function() {

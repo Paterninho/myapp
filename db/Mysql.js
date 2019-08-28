@@ -2,13 +2,13 @@ const mysql = require('mysql');
 var express = require('express');
 var app = express.Router();
 var optionConection = {
-  host     : '10.3.79.235',
-  user     : 'datasaude',
-  password : 'sau09*123data',
-  //host     : 'localhost',
-  //user     : 'root',
-  //password : 'password',
-  database : 'datasaude'
+  //host     : '10.3.79.235',
+  //user     : 'datasaude',
+  //password : 'sau09*123data',
+  host     : 'localhost',
+  user     : 'root',
+  password : 'password',
+  //database : 'datasaude'
 };
 var results;
 function execSQLQuery(sqlQry){
@@ -74,7 +74,7 @@ function getAllTables(typeGraph, res){
     execSQLQuery(sql).then((results)=> {console.log(results); res.json(results)}).catch((err)=> {res.json(err)}); 
   });
 }
-
+/*
 app.post('/column', function(req, res) {
   getAllTables('columns', res);
 })
@@ -83,9 +83,10 @@ app.post('/line', function(req, res) {
   getAllTables('line', res);
 
 })
+*/
 
-app.post('/pie', function(req, res) {
+/*app.post('/pie', function(req, res) {
   getAllTables('pie', res);
 })
-
+*/
 module.exports = app;
