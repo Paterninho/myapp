@@ -2,10 +2,10 @@ var express = require('express');
 var app = express.Router();
 const config = require('../config');
 var _ = require('underscore');
-
+var arff = require('node-arff');
 var weka = require('../lib/weka-lib.js');
 
-var arff = require('node-arff');
+
 
 
 
@@ -27,7 +27,7 @@ app.post('/iaback', function(req, res) {
 },
 */
 function simplesCassificacao(file, classifier, cb) {
-    arff.load(file, function(err, data) {
+    arff.load('./datasets/teste.arff', function(err, data) {
 
         if (!_.isNull(err)) {
             cb(err);

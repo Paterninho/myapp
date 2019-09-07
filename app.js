@@ -1,4 +1,5 @@
 var weka = require('./lib/weka-lib.js');
+var arff = require('node-arff');
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -49,7 +50,8 @@ app.use('/users', users);
 app.use('/forgot', forgot);
 app.use('/iateste', iateste);
 app.use('/index', index);
-app.use(weka)
+app.use(weka);
+
 
 app.listen(app.get('port'), function() {
     console.log('Express server listening on port ' + app.get('port'));
