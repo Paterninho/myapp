@@ -1,5 +1,4 @@
 var weka = require('./lib/weka-lib.js');
-var arff = require('node-arff');
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');

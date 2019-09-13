@@ -15,13 +15,12 @@
         });
       } else {
         res.json({
+          success: true,
           email: result.email,
           id: result._id,
           name: result.name,
-          pw: result.password,
           status: result.status,
           perfil: result.perfil,
-          success: true,
           message: 'Email cadastrado.',
         });
       }
@@ -163,9 +162,9 @@
 
   app.post('/updateUser', function(req, res) {
     
-    const {username, email, password, newpassword, confirmenewpw, id } = req.body;
+    const {username, email, password, newpassword, confirmenewpw, id, emailnew } = req.body;
 
-    if(password === undefined){
+    if(password === undefined && password === null){
       res.json({
         success: false,
         message: 'Informe sua senha para efetuar a alteração.',
@@ -201,7 +200,7 @@
         
           const dataToInsert = {
             name: username,
-            email,
+            email: emailnew,
             password: hash,
           };
   
@@ -227,7 +226,7 @@
   
       const dataToInsert = {
         name: username,
-        email,
+        email: emailnew,
       };
     
       const handler = (err, result) => {
