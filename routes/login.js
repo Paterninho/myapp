@@ -25,8 +25,11 @@ app.post('/login', function(req, res, next) {
                 res.json({
                     success: true,
                     token: generatedToken,
+                    name: result.name,
                     email: result.email,
+                    perfil: result.perfil,
                     status: result.status,
+
                 });
             }else{
               res.json({
