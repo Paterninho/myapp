@@ -67,5 +67,12 @@ module.exports = {
         base.find((err, result) => {
             handler(err, result);
         })
-    }
+    },
+
+    BasesGem: (data, handler) => {
+        console.log(data);
+        base.find(data, (err, result) => {
+            handler(err, result);
+        })
+    },
 }
