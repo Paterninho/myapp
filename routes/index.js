@@ -71,6 +71,38 @@ app.post('/line', (req, res, next) => {
 
 });
 
+app.post('/linePredict', (req, res, next) => {
+  const {ano, faixaEtaria, regio}  = req.body;
+ 
+  const dataToInsert = {
+    ano,
+    faixaEtaria,
+    regio
+  };
+
+  const handler = (err, result) => {
+    if (!err && result != null) {
+      result.toArray((err, users) => {
+        if(!err){
+          res.json({
+            success: true,
+            data: seasons.sort(users)
+          });
+        }
+      })
+    } else {
+      res.json({
+        success: false,
+        message: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
+        error: err
+      });
+    }
+  }
+
+  db.BasesPredict(dataToInsert ,handler);
+
+});
+
 
 app.post('/pie', (req, res, next) => {
   const {genero, mes, faixaEtaria, ano}  = req.body;

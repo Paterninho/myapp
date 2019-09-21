@@ -6,6 +6,7 @@ var db;
 var collection;
 var forgot;
 var base;
+var predict;
 
 MongoClient.connect(config.MONGO_URL, (err, dataBase) => {
     if(!err){
@@ -14,6 +15,7 @@ MongoClient.connect(config.MONGO_URL, (err, dataBase) => {
         collection = db.collection('users');
         forgot = db.collection('forgot');
         base = db.collection('sei la');
+        predict = db.collection('predicted');
     } else {
         console.log('Não foi possível estabelecer conexão com o banco de dados.')
     }
@@ -72,6 +74,12 @@ module.exports = {
     BasesGem: (data, handler) => {
         console.log(data);
         base.find(data, (err, result) => {
+            handler(err, result);
+        })
+    },
+    BasesPredict: (data, handler) => {
+        console.log(data);
+        predict.find(data, (err, result) => {
             handler(err, result);
         })
     },
