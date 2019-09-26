@@ -24,11 +24,8 @@
           message: 'Email cadastrado.',
         });
       }
-      
     }
-
     db.findUser({email}, handler);
-  
   });
 
   app.post('/listusers', (req, res, next) => {
@@ -50,9 +47,7 @@
         });
       }
     }
-  
     db.findAll(handler);
-  
   });
 
   app.post('/updateADMPW', function(req, res){
@@ -66,22 +61,17 @@
       });
       return;
     }
-
         if(newpassword != confirmepassword){
           res.json({
             success: false,
             message: 'Os campos de senha não conferem.',
           }); 
           return;
-          
         }else{
-
         const hash = bcrypt.hashSync(newpassword, config.SALT_ROUNDS);
-
         const dataToInsert = {
           password: hash,
         };
-
         const handler = (err, result) => {
           if (!err) {
             res.json({
@@ -97,9 +87,7 @@
           });
         }
     }
-
     db.updateOne(id, dataToInsert, handler);
-      
     }
 });
 
@@ -108,11 +96,9 @@
     const {id, perfil} = req.body;
 
     if(perfil === 'Inativo'){
-
       const dataToInsert = {
         status: perfil,
       };
-
       const handler = (err, result) => {
         if (!err) {
           res.json({
@@ -130,14 +116,12 @@
   }
 
   db.updateOne(id, dataToInsert, handler);
-
+  
     }else if(perfil != 'Inativo'){
-
       const dataToInsert = {
         status: 'Ativo',
         perfil: perfil,
       };
-
       const handler = (err, result) => {
         if (!err) {
           res.json({
@@ -152,10 +136,8 @@
           error: err
         });
       }
-  }
-
-  db.updateOne(id, dataToInsert, handler);
-
+    }
+      db.updateOne(id, dataToInsert, handler);
     }
   });
 
