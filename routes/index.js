@@ -27,19 +27,30 @@ var date = require('date-and-time');
     }
 
   app.post('/line', (req, res, next) => {
-    const {ano, faixaEtaria, regio}  = req.body;
+    var mes = undefined;
+    var mesesArr = Object.keys(seasons).filter(mes => {
+      return typeof seasons[mes] != "function"
+    });
+    
+    const {ano, faixaEtaria, regio, paraPredicao}  = req.body;
   
     const dataToInsert = {
       ano,
       faixaEtaria,
       regio
     };
+    if (paraPredicao) {
+      mes = {
+        "$in" : mesesArr.slice(mesesArr.indexOf(req.body.mes))
+      } 
+      dataToInsert["mes"] = mes
+    }
+
 
     const handler = (err, result) => {
       if (!err && result != null) {
         result.toArray((err, users) => {
           if(!err){
-          
             res.json({
               success: true,
               data: seasons.sort(users)
@@ -54,7 +65,7 @@ var date = require('date-and-time');
         });
       }
     }
-
+    
     db.BasesGem(dataToInsert ,handler);
 
   });
@@ -133,13 +144,26 @@ var date = require('date-and-time');
   });
 
   app.post('/column', (req, res, next) => {
-    const {faixaEtaria, ano, genero}  = req.body;
+    var mes = undefined;
+    var mesesArr = Object.keys(seasons).filter(mes => {
+      return typeof seasons[mes] != "function"
+    });
+
+    const {faixaEtaria, ano, genero, paraPredicao}  = req.body;
   
     const dataToInsert = {
       faixaEtaria,
       ano,
       genero
     };
+
+    if (paraPredicao) {
+      mes = {
+        "$in" : mesesArr.slice(mesesArr.indexOf(req.body.mes))
+      } 
+      dataToInsert["mes"] = mes
+    }
+
 
     const handler = (err, result) => {
       if (!err && result != null) {
