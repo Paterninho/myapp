@@ -27,45 +27,108 @@ var date = require('date-and-time');
     }
 
   app.post('/line', (req, res, next) => {
-    const {ano, faixaEtaria, regio}  = req.body;
-  
-    const dataToInsert = {
-      ano,
-      faixaEtaria,
-      regio
-    };
+    const {ano, faixaEtaria, regio, genero}  = req.body;
 
-    const handler = (err, result) => {
-      if (!err && result != null) {
-        result.toArray((err, users) => {
-          if(!err){
-          
-            res.json({
-              success: true,
-              data: seasons.sort(users)
-            });
-          }
-        })
-      } else {
-        res.json({
-          success: false,
-          message: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
-          error: err
-        });
+    if(genero == 'Todos'){
+      const dataToInsert = {
+        ano,
+        faixaEtaria,
+        regio
+      };
+  
+      const handler = (err, result) => {
+        if (!err && result != null) {
+          result.toArray((err, users) => {
+            if(!err){
+            
+              res.json({
+                success: true,
+                data: seasons.sort(users)
+              });
+            }
+          })
+        } else {
+          res.json({
+            success: false,
+            message: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
+            error: err
+          });
+        }
       }
+  
+      db.BasesGem(dataToInsert ,handler);
+    
+    }else{
+
+      const dataToInsert = {
+        ano,
+        faixaEtaria,
+        regio,
+        genero
+      };
+  
+      const handler = (err, result) => {
+        if (!err && result != null) {
+          result.toArray((err, users) => {
+            if(!err){
+            
+              res.json({
+                success: true,
+                data: seasons.sort(users)
+              });
+            }
+          })
+        } else {
+          res.json({
+            success: false,
+            message: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
+            error: err
+          });
+        }
+      }
+  
+      db.BasesGem(dataToInsert ,handler);
+  
     }
 
-    db.BasesGem(dataToInsert ,handler);
-
-  });
+    });
 
   app.post('/linePredict', (req, res, next) => {
-    const {ano, faixaEtaria, regio}  = req.body;
+    const {faixaEtaria, regio, genero}  = req.body;
   
+    if(genero == 'Todos'){
+      const dataToInsert = {
+        faixaEtaria,
+        regio
+      };
+  
+      const handler = (err, result) => {
+        if (!err && result != null) {
+          result.toArray((err, users) => {
+            if(!err){
+              res.json({
+                success: true,
+                data: seasons.sort(users)
+              });
+            }
+          })
+        } else {
+          res.json({
+            success: false,
+            message: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
+            error: err
+          });
+        }
+      }
+  
+      db.BasesPredict(dataToInsert ,handler);
+  
+    }else{
+      
     const dataToInsert = {
-      ano,
       faixaEtaria,
-      regio
+      regio,
+      genero
     };
 
     const handler = (err, result) => {
@@ -89,18 +152,45 @@ var date = require('date-and-time');
 
     db.BasesPredict(dataToInsert ,handler);
 
+  }
+
   });
 
   app.post('/pie', (req, res, next) => {
     const {genero, mes, faixaEtaria, ano}  = req.body;
-    /*
-    const dataToInsert = {
-      genero,
-      regio,
-      faixaEtaria,
-      ano
-    };
-    */
+
+    if(genero == 'Todos'){
+
+      const dataToInsert = {
+        mes,
+        faixaEtaria,
+        ano
+      };
+  
+      const handler = (err, result) => {
+        if (!err && result != null) {
+          result.toArray((err, users) => {
+            if(!err){
+            
+              res.json({
+                success: true,
+                data: seasons.sort(users)
+              });
+            }
+          })
+        } else {
+          res.json({
+            success: false,
+            message: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
+            error: err
+          });
+        }
+      }
+  
+      db.BasesGem(dataToInsert ,handler);
+
+    }else{
+
     const dataToInsert = {
       genero,
       mes,
@@ -130,10 +220,42 @@ var date = require('date-and-time');
 
     db.BasesGem(dataToInsert ,handler);
 
+  }
+
   });
 
   app.post('/column', (req, res, next) => {
     const {faixaEtaria, ano, genero}  = req.body;
+
+    if(genero == 'Todos'){
+      const dataToInsert = {
+        faixaEtaria,
+        ano,
+      };
+  
+      const handler = (err, result) => {
+        if (!err && result != null) {
+          result.toArray((err, users) => {
+            if(!err){
+            
+              res.json({
+                success: true,
+                data: seasons.sort(users)
+              });
+            }
+          })
+        } else {
+          res.json({
+            success: false,
+            message: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
+            error: err
+          });
+        }
+      }
+  
+      db.BasesGem(dataToInsert ,handler);
+  
+    }else{
   
     const dataToInsert = {
       faixaEtaria,
@@ -163,15 +285,46 @@ var date = require('date-and-time');
 
     db.BasesGem(dataToInsert ,handler);
 
+  }
+
   });
 
 
   app.post('/columnPredict', (req, res, next) => {
-    const {faixaEtaria, ano, genero}  = req.body;
+    const {faixaEtaria, genero}  = req.body;
   
+    
+    if(genero == 'Todos'){
+      const dataToInsert = {
+        faixaEtaria,
+      };
+  
+      const handler = (err, result) => {
+        if (!err && result != null) {
+          result.toArray((err, users) => {
+            if(!err){
+            
+              res.json({
+                success: true,
+                data: seasons.sort(users)
+              });
+            }
+          })
+        } else {
+          res.json({
+            success: false,
+            message: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
+            error: err
+          });
+        }
+      }
+  
+      db.BasesPredict(dataToInsert ,handler);
+  
+    }else{
+      
     const dataToInsert = {
       faixaEtaria,
-      ano,
       genero
     };
 
@@ -197,12 +350,48 @@ var date = require('date-and-time');
 
     db.BasesPredict(dataToInsert ,handler);
 
+  }
+
   });
 
 
   app.post('/area', (req, res, next) => {
     const {faixaEtaria, ano, genero}  = req.body;
+
+    
+    if(genero != 'Todos'){
+
+    /*  
+      const dataToInsert = {
+        faixaEtaria,
+        ano,
+        genero
+      };
   
+      const handler = (err, result) => {
+        if (!err && result != null) {
+          result.toArray((err, users) => {
+            if(!err){
+            
+              res.json({
+                success: true,
+                data: seasons.sort(users)
+              });
+            }
+          })
+        } else {
+          res.json({
+            success: false,
+            message: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
+            error: err
+          });
+        }
+      }
+  
+      db.BasesGem(dataToInsert ,handler);
+  
+    }else{
+  */
     const dataToInsert = {
       faixaEtaria,
       ano,
@@ -230,6 +419,8 @@ var date = require('date-and-time');
     }
 
     db.BasesGem(dataToInsert ,handler);
+
+  }
 
   });
   
