@@ -27,71 +27,51 @@ var date = require('date-and-time');
     }
 
   app.post('/line', (req, res, next) => {
-    const {ano, faixaEtaria, regio, genero}  = req.body;
-
-    if(genero == 'Todos'){
-      const dataToInsert = {
-        ano,
-        faixaEtaria,
-        regio
-      };
-  
-      const handler = (err, result) => {
-        if (!err && result != null) {
-          result.toArray((err, users) => {
-            if(!err){
-            
-              res.json({
-                success: true,
-                data: seasons.sort(users)
-              });
-            }
-          })
-        } else {
-          res.json({
-            success: false,
-            message: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
-            error: err
-          });
-        }
-      }
-  
-      db.BasesGem(dataToInsert ,handler);
+    var mes = undefined;
+    var mesesArr = Object.keys(seasons).filter(mes => {
+      return typeof seasons[mes] != "function"
+    });
     
-    }else{
-
-      const dataToInsert = {
-        ano,
-        faixaEtaria,
-        regio,
-        genero
-      };
+    const {ano, faixaEtaria, regio, paraPredicao}  = req.body;
   
-      const handler = (err, result) => {
-        if (!err && result != null) {
-          result.toArray((err, users) => {
-            if(!err){
-            
-              res.json({
-                success: true,
-                data: seasons.sort(users)
-              });
-            }
-          })
-        } else {
-          res.json({
-            success: false,
-            message: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
-            error: err
-          });
-        }
+    const dataToInsert = {
+      ano,
+      faixaEtaria,
+      regio
+    };
+    if (paraPredicao) {
+      mes = {
+        "$in" : mesesArr.slice(mesesArr.indexOf(req.body.mes))
+      } 
+      dataToInsert["mes"] = mes
+    }
+
+
+    const handler = (err, result) => {
+      if (!err && result != null) {
+        result.toArray((err, users) => {
+          if(!err){
+            res.json({
+              success: true,
+              data: seasons.sort(users)
+            });
+          }
+        })
+      } else {
+        res.json({
+          success: false,
+          message: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
+          error: err
+        });
       }
   
       db.BasesGem(dataToInsert ,handler);
   
     }
+    
+    db.BasesGem(dataToInsert ,handler);
 
-    });
+  });
 
   app.post('/linePredict', (req, res, next) => {
     const {faixaEtaria, regio, genero}  = req.body;
@@ -225,43 +205,26 @@ var date = require('date-and-time');
   });
 
   app.post('/column', (req, res, next) => {
-    const {faixaEtaria, ano, genero}  = req.body;
+    var mes = undefined;
+    var mesesArr = Object.keys(seasons).filter(mes => {
+      return typeof seasons[mes] != "function"
+    });
 
-    if(genero == 'Todos'){
-      const dataToInsert = {
-        faixaEtaria,
-        ano,
-      };
-  
-      const handler = (err, result) => {
-        if (!err && result != null) {
-          result.toArray((err, users) => {
-            if(!err){
-            
-              res.json({
-                success: true,
-                data: seasons.sort(users)
-              });
-            }
-          })
-        } else {
-          res.json({
-            success: false,
-            message: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
-            error: err
-          });
-        }
-      }
-  
-      db.BasesGem(dataToInsert ,handler);
-  
-    }else{
+    const {faixaEtaria, ano, genero, paraPredicao}  = req.body;
   
     const dataToInsert = {
       faixaEtaria,
       ano,
       genero
     };
+
+    if (paraPredicao) {
+      mes = {
+        "$in" : mesesArr.slice(mesesArr.indexOf(req.body.mes))
+      } 
+      dataToInsert["mes"] = mes
+    }
+
 
     const handler = (err, result) => {
       if (!err && result != null) {
@@ -284,8 +247,6 @@ var date = require('date-and-time');
     }
 
     db.BasesGem(dataToInsert ,handler);
-
-  }
 
   });
 
