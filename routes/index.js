@@ -64,9 +64,6 @@ var date = require('date-and-time');
           error: err
         });
       }
-  
-      db.BasesGem(dataToInsert ,handler);
-  
     }
     
     db.BasesGem(dataToInsert ,handler);
@@ -211,12 +208,22 @@ var date = require('date-and-time');
     });
 
     const {faixaEtaria, ano, genero, paraPredicao}  = req.body;
+
+    if(genero == 'Todos'){
+      var dataToInsert = {
+        faixaEtaria,
+        ano,
+      }
+
+      }else{
   
-    const dataToInsert = {
+    var dataToInsert = {
       faixaEtaria,
       ano,
       genero
     };
+
+  }
 
     if (paraPredicao) {
       mes = {
