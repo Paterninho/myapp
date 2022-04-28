@@ -6,7 +6,7 @@
     "start": "nodemon ./bin/www"
   },
   "dependencies": {
-    "async": "^2.6.3",
+    "async": "^2.6.4",
     "bcrypt": "^3.0.6",
     "bcrypt-nodejs": "0.0.3",
     "consign": "^0.1.6",
